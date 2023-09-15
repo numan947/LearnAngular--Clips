@@ -1,6 +1,6 @@
 # CONFIGURING FIREBASE API
 To use this project add your own API keys in the generated environment files.
-1. Step 1: cd <PROJECT DIR>
+1. Step 1: cd "PATH_TO_PROJECT"
 2. Step 2: ng g environments --> two files will be generated under `environment` folder
 3. Step 3: Copy the following code snippet to both of the files;
 4. Step 4: Generate and add your own Firebase API key to the code snippet.
