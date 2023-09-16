@@ -41,7 +41,7 @@
       ></app-input>
     </div>
     <button 
-    [disabled]="registerForm.invalid" 
+    [disabled]="registerForm.invalid || inSubmission" 
     type="submit" 
     class="block w-full
       disabled:bg-indigo-200 
