@@ -1,11 +1,8 @@
 # CONFIGURING FIREBASE API
-To use this project add your own API keys in the generated environment files.
-1. Step 1: cd "PATH_TO_PROJECT"
-2. Step 2: `ng g environments` --> two files will be generated under `environment` folder
-3. Step 3: Copy the following code snippet to both of the files;
-4. Step 4: Generate and add your own Firebase API key to the code snippet.
-5. Step 5: In the `environment.development.ts` file, set production: false
-
+To use this project, you need to configure your own Firebase API. Follow the steps below to configure your own Firebase API.
+1. Step 1: cd "PATH_TO_PROJECT". For example, `cd C:\Users\user\Documents\GitHub\clips`.
+2. Step 2: `ng g environments` --> two files will be generated under `environment` folder. One is `environment.ts` and the other is `environment.development.ts`.
+3. Step 3: Copy the following code snippet to both of the files. 
 ```typescript
 export const environment = {
 	production: true,
@@ -19,6 +16,9 @@ export const environment = {
 	  },
 };
 ```
+4. Step 4: Generate and add your own Firebase API key to the code snippet. 
+5. Step 5: In the `environment.development.ts` file, set production: false.
+
 
 # Clips
 
