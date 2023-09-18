@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import IUser from 'src/app/models/user.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { RegisterValidators } from '../validators/register-validators';
+import { EmailTaken } from 'src/app/users/validators/email-taken';
 
 @Component({
   selector: 'app-register',
@@ -9,8 +11,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  constructor(private auth:AuthService){}
 
+  passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/;
   registerForm = new FormGroup({
     name: new FormControl('',[
       Validators.required,
@@ -20,7 +22,7 @@ export class RegisterComponent {
     email: new FormControl('', [
       Validators.email,
       Validators.required
-    ]),
+    ], [this.emailTaken.validate]),
     
     age: new FormControl<number|null>(null,[
       Validators.required,
@@ -31,17 +33,20 @@ export class RegisterComponent {
     password: new FormControl('',
     [
     Validators.required,
-    Validators.pattern(".*")
+    Validators.pattern(this.passwordRegex),
     ]),
     
     confirmPassword: new FormControl('',
-    [Validators.required]),
-    
+    [
+      Validators.required,
+      Validators.pattern(this.passwordRegex)
+    ]),
+
     phoneNumber: new FormControl('',
     [Validators.required,
     Validators.minLength(13),
   Validators.maxLength(13)]),
-  });
+  },[RegisterValidators.match('password','confirmPassword')]);
   
   alertColor: string = 'blue';
   showAlert: boolean = false;
@@ -49,6 +54,7 @@ export class RegisterComponent {
   inSubmission:boolean = false;
 
 
+  constructor(private auth:AuthService, private emailTaken:EmailTaken){}
 
   async register(){
     this.showAlert = true;
@@ -58,7 +64,7 @@ export class RegisterComponent {
 
     
     try{
-      this.auth.createUser(this.registerForm.value as IUser)
+      await this.auth.createUser(this.registerForm.value as IUser);
     }catch(e){
       console.log(e);
       this.alertMsg = "An unexpected error occured. Please try again later.";

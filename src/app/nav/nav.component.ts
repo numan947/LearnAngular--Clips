@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from '../services/modal.service';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -10,7 +11,8 @@ import { AuthService } from '../services/auth.service';
 export class NavComponent implements OnInit {
   constructor(
     public modal: ModalService, 
-    public auth:AuthService
+    public auth:AuthService,
+    public router:Router
     ) {
     }
 
@@ -24,10 +26,5 @@ export class NavComponent implements OnInit {
 
     this.modal.toggleModal('auth');
   }
-
-  logout($event: MouseEvent) {
-    $event.preventDefault();
-    this.auth.logout();
-  }
-    
+      
 }
