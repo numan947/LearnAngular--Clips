@@ -8,6 +8,7 @@ import firebase from 'firebase/compat/app';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ClipService } from 'src/app/services/clip.service';
 import { Router } from '@angular/router';
+import { FfmpegService } from 'src/app/services/ffmpeg.service';
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -22,6 +23,7 @@ export class UploadComponent implements OnDestroy{
   percentage:number = 0;
   showPercentage:boolean = false;
   task?:AngularFireUploadTask;
+  screenshots:string[] = [];
 
   isDragOver:boolean = false;
   file:File | null = null;
@@ -45,10 +47,12 @@ export class UploadComponent implements OnDestroy{
     private storage:AngularFireStorage, 
     private auth:AngularFireAuth,
     private clipService:ClipService,
-    private router:Router
+    private router:Router,
+    public ffmpegService:FfmpegService
     
     ) {
-    auth.user.subscribe(user=>{this.user = user;})
+    this.auth.user.subscribe(user=>{this.user = user;});
+    this.ffmpegService.init();
   }
   
   
@@ -57,7 +61,7 @@ export class UploadComponent implements OnDestroy{
   }
 
 
-  storeFile($event: Event) {
+  async storeFile($event: Event) {
     this.isDragOver = false;
     this.file =  ($event as DragEvent).dataTransfer ? 
                  ($event as DragEvent).dataTransfer?.files.item(0) ?? null : 
@@ -68,6 +72,9 @@ export class UploadComponent implements OnDestroy{
       this.nextStep = false; 
       return;
     }
+
+    this.screenshots = await this.ffmpegService.getScreenshots(this.file);
+
     this.title.setValue(this.file.name.replace(/\.[^/.]+$/, ''));
     this.nextStep = true;
   }
