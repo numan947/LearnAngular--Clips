@@ -7,6 +7,7 @@ import { FFmpeg, createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 export class FfmpegService {
 
   isReady: boolean = false;
+  isRunning: boolean = false;
   private ffmpeg:FFmpeg;
 
 
@@ -22,6 +23,7 @@ export class FfmpegService {
    }
 
    async getScreenshots(file: File) {
+    this.isRunning = true;
     const data = await fetchFile(file);
     this.ffmpeg.FS('writeFile', file.name, data);
 
@@ -29,7 +31,7 @@ export class FfmpegService {
     const seconds = [1,2,3];
     const commands:string[] = [];
 
-    seconds.forEach(second =>{
+    seconds.forEach(second =>{ 
       commands.push(
           '-i', file.name, // Input 
           // Output options
@@ -55,6 +57,12 @@ export class FfmpegService {
       screenshots.push(url);
     });
 
+    this.isRunning = false;
     return screenshots;
+  }
+
+  async blobFromUrl(url: string) {
+    const response = await fetch(url);
+    return await response.blob();
   }
 }

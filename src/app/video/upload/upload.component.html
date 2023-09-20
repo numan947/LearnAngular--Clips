@@ -5,15 +5,13 @@
 
 
     <ng-container *ngIf="!ffmpegService.isReady">
-      <span class="material-icon text-center text-6xl p-8 animate-spin">
-        Settings
-      </span>
+      <span class="material-icons text-center text-6xl p-8 animate-ping">settings</span>
     </ng-container>
 
 <ng-container *ngIf="ffmpegService.isReady">
   <ng-container *ngIf="!nextStep; else uploadFormCtr">
     <!-- Upload Dropbox -->
-    <div app-event-blocker (dragend)="isDragOver = false"
+    <div *ngIf="!ffmpegService.isRunning" app-event-blocker (dragend)="isDragOver = false"
       (dragover)="isDragOver = true" (dragenter)="isDragOver = true" (dragleave)="isDragOver = false"
       (mouseleave)="isDragOver = false" (drop)="storeFile($event)" [ngClass]="{
         'bg-indigo-400 border-indigo-400 border solid': isDragOver
@@ -24,6 +22,7 @@
         hover:bg-indigo-400 hover:border-indigo-400 hover:border-solid text-xl">
       <h5>Drop your file here (mp4 only!)</h5>
     </div>
+    <span *ngIf="ffmpegService.isRunning" class="material-icons text-center text-6xl p-8 animate-spin">autorenew</span>
     <input type="file" class="mt-4" (change)="storeFile($event)">
   </ng-container>
   <!-- Video Editor -->
@@ -40,8 +39,11 @@
         <h2 class="mb-4 text-xl">Select a Thumbnail</h2>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           
-          <div *ngFor="let ss of screenshots" class="border-8 cursor-pointer border-green-400">
-            <img [src]="ss | safeURL">
+          <div *ngFor="let ss of screenshots"class="border-8 cursor-pointer" [ngClass]="{
+            'border-green-400': ss === selectedScreenshot,
+            'border-transparent': ss !== selectedScreenshot
+          }" >
+            <img [src]="ss | safeURL" (click)="selectImage(ss)">
           </div>
 
         </div>
