@@ -11,10 +11,10 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./manage.component.css']
 })
 export class ManageComponent implements OnInit {
-
-  videoOrder: string = '1'; // 1 = descending order, 2 = ascending order
   
-  sort$:BehaviorSubject<string>;    
+  videoOrder: string = '1'; // 1 = descending order, 2 = ascending order
+
+  sort$: BehaviorSubject<string>;
 
   clips: IClip[] = [];
   activeClip: IClip | null = null;
@@ -25,7 +25,7 @@ export class ManageComponent implements OnInit {
     private route: ActivatedRoute,
     private clipService: ClipService,
     private modal: ModalService
-  ) { 
+  ) {
     this.sort$ = new BehaviorSubject<string>(this.videoOrder);
   }
 
@@ -75,13 +75,24 @@ export class ManageComponent implements OnInit {
   deleteClip($event: Event, clip: IClip) {
     $event.preventDefault();
     $event.stopPropagation();
-    
+
     this.clipService.deleteClip(clip);
 
-    this.clips.forEach((element, index)=>{
-      if(element.docId === clip.docId)
+    this.clips.forEach((element, index) => {
+      if (element.docId === clip.docId)
         this.clips.splice(index, 1);
     });
+  }
+
+  copyToCliboard($event: Event, arg1: string|undefined) {
+    console.log("copyToCliboard")
+    $event.preventDefault();
+    if(!arg1)
+      return;
+    const url = `${location.origin}/clip/${arg1}`
+    navigator.clipboard.writeText(url);
+
+    alert('Copied to clipboard');
   }
 
 }
