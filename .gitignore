@@ -98,3 +98,4 @@ e2e/*.map
 
 environments/
 template/
+.vercel
